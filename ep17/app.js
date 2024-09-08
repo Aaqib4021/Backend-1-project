@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  let { email, password, username, name, age } = req.body;
+  le    t { email, password, username, name, age } = req.body;
 
   //   let user = await userModel.findOne({ email });
   //   if (user) return res.status(500).send("registered user");
@@ -25,14 +25,14 @@ app.post("/register", async (req, res) => {
     });
   });
 
-  //   let createdUser = await userModel.create({
-  //     username,
-  //     name,
-  //     age,
-  //     email,
-  //     password,
-  //   });
-  //   res.send;
+    let createdUser = await userModel.create({
+      username,
+      name,
+      age,
+      email,
+      password,
+    });
+    res.send;
 });
 
 app.listen(3000);
