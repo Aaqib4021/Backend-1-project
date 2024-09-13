@@ -11,6 +11,13 @@
       <div class="w-full flex justify-end">
         <a class="bg-red-500 rounded-md px-3 py-2" href="/logout">Logout</a>
       </div>
+      <div>
+        <img
+          class="w-10 h-10 rounded-lg object-cover"
+          src="/Images/uploads/<%= user.profilepic%>"
+          alt="user"
+        />
+      </div>
       <h3 class="text-3xl tracking-tighter">Hey, <%=user.name%> 👋</h3>
       <h5 class="mb-3">You can create a post</h5>
       <form action="/post" method="post">
@@ -29,7 +36,7 @@
         <h2>Your posts.</h2>
         <%if(user.posts.length===0){%>
         <h3 class="mt-8 text-zinc-500">
-          You do not have any post please create one
+          You do not have any posts currently please create one.
         </h3>
         <% }%>
 

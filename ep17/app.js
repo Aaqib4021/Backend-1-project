@@ -5,14 +5,44 @@ const postModel = require("./models/post.model");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+// const multer = require("multer");
+const crypto = require("crypto");
+const path = require("path");
+const upload = require("./config/multer.config");
 
 app.set("view engine", "ejs");
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "./public/images/uploads");
+//   },
+//   filename: function (req, file, cb) {
+//     crypto.randomBytes(12, (err, bytes) => {
+//       const fn = bytes.toString("hex") + path.extname(file.originalname);
+//       cb(null, fn);
+//     });
+//   },
+// });
+
+// const upload = multer({ storage: storage });
+
 app.get("/", (req, res) => {
   res.render("index");
+});
+app.get("/profile/upload", (req, res) => {
+  res.render("filetest");
+});
+
+app.post("/upload", isLoggedIn, upload.single("image"), async (req, res) => {
+  const user = await userModel.findOneAndUpdate(
+    { email: req.user.email },
+    { profilepic: req.file.filename }
+  );
+  res.redirect("/profile");
 });
 
 app.get("/login", (req, res) => {
@@ -24,7 +54,9 @@ app.get("/logout", (req, res) => {
   res.cookie("token", "");
   res.redirect("/login");
 });
-
+// app.get("/upload", function (req, res) {
+//   res.render("filetest");
+// });
 app.get("/like/:id", isLoggedIn, async (req, res) => {
   let post = await postModel.findOne({ _id: req.params.id }).populate("user");
   if (post.likes.indexOf(req.user.userid) === -1) {
@@ -52,6 +84,10 @@ app.get("/delete/:id", async (req, res) => {
   await postModel.findOneAndDelete({ _id: req.params.id });
   res.redirect("/profile");
 });
+
+// app.post("/upload", upload.single("image"), (req, res) => {
+//   console.log(req.file);
+// });
 
 app.post("/post", isLoggedIn, async (req, res) => {
   let user = await userModel.findOne({ email: req.user.email });
